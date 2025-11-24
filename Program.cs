@@ -1,15 +1,14 @@
+using System;
+using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
 
-
-class  Program
+class Program
 {
     static HttpClient client = new HttpClient();
-    static string serverUrl = "https://pc-remote-controller.onrender.com"
+    static string serverUrl = "https://pc-remote-controller.onrender.com"; // Render URL'ini buraya tam olarak yaz
 
-    static async EventTask Main()
+    static async Task Main()
     {
         Console.WriteLine("PC Remote Client çalışıyor. Komutlar dinleniyor...");
 
@@ -17,11 +16,12 @@ class  Program
         {
             try
             {
+                // Komut al
                 string cmd = await client.GetStringAsync($"{serverUrl}/get-command");
 
                 if (!string.IsNullOrWhiteSpace(cmd))
                 {
-                    Console.WriteLine("Gelen Komut: " + cmd);
+                    Console.WriteLine("Gelen komut: " + cmd);
 
                     if (cmd == "shutdown")
                     {
@@ -33,13 +33,16 @@ class  Program
                     }
                     else if (cmd == "lock")
                     {
-                        Process.Start("rund1132.exe", "user32.dll,LockWorkStation");
+                        Process.Start("rundll32.exe", "user32.dll,LockWorkStation");
                     }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Hata: " + ex.Message);
+            }
 
-            await Task.Delay(1500);
+            await Task.Delay(1500); // 1.5 saniyede bir check
         }
     }
 }
