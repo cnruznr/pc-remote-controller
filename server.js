@@ -1,30 +1,33 @@
 const express = require("express");
 const cors = require("cors");
-const { exec } = require("child_process");
+
+let lastCommand = "";
 
 const app = express();
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 app.get("/", (req, res) => {
     res.send("PC Remote Controller is running.");
 });
 
-// Bilgisayarı kapat
-app.post("/shutdown", (req, res) => {
-    exec("shutdown /s /f /t 0", (err) => {
-        if (err) return res.status(500).send("Hata!");
-        res.send("Bilgisayar kapatılıyor...");
-    });
+// TELEFON → backend
+app.post("/send-command", (req, res) => {
+    const { command } = req.body;
+
+    if (!command) return res.status(400).send("Komut eksik.");
+
+    lastCommand = command;
+    console.log("Komut alındı:", command);
+
+    res.send("Komut gönderildi.");
 });
 
-// Restart
-app.post("/restart", (req, res) => {
-    exec("shutdown /r /f /t 0", (err) => {
-        if (err) return res.status(500).send("Hata!");
-        res.send("Bilgisayar yeniden başlatılıyor...");
-    });
+// PC CLIENT → backend
+app.get("/get-command", (req, res) => {
+    res.send(lastCommand);
+    lastCommand = "";  // komutu okuduktan sonra sıfırla
 });
 
 const port = process.env.PORT || 3000;
-app.listen(port, () => console.log("Server çalışıyor: " + port));
+app.listen(port, () => console.log(`Server çalışıyor: ${port}`));
