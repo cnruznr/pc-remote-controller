@@ -1,22 +1,12 @@
 {
-  "name": "pc-client",
+  "name": "pc-remote-controller",
   "version": "1.0.0",
-  "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node server.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "commonjs",
   "dependencies": {
-    "express": "^5.1.0",
-    "ws": "^8.18.3",
+    "express": "^4.18.2",
     "cors": "^2.8.5"
-  },
-  "devDependencies": {
-    "eslint": "^9.39.1"
   }
 }
